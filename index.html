@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>423 Flora Vista Drive — Due Diligence Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #FAF8F5;
+  --card-bg: #FFFFFF;
+  --border: #E5E0D8;
+  --text: #2C2A26;
+  --text-muted: #6B6760;
+  --green: #6B8E5A;
+  --amber: #C4923E;
+  --red: #A85543;
+  --blue: #4A6B8A;
+  --font-serif: 'Lora', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Header */
+.site-header {
+  background: #2C2A26;
+  color: #F5F3F0;
+  padding: 20px 32px;
+}
+.site-header h1 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  font-size: 13px;
+  color: #B8B4AE;
+}
+.header-meta span { white-space: nowrap; }
+.status-badge {
+  display: inline-block;
+  background: var(--amber);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+}
+
+/* Nav */
+.tab-nav {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 32px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.tab-btn {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.tab-btn:hover { background: #F0EDE8; color: var(--text); }
+.tab-btn.active {
+  background: var(--bg);
+  color: var(--text);
+  border-color: var(--border);
+  font-weight: 600;
+}
+
+/* Tab content */
+.tab-panel { display: none; padding: 28px 32px 48px; max-width: 960px; margin: 0 auto; }
+.tab-panel.active { display: block; }
+
+/* Typography */
+h2 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+h3 {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 12px;
+  color: var(--text);
+}
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 20px 0 8px;
+  color: var(--text);
+}
+p { margin-bottom: 12px; }
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.callout {
+  background: #F0EDE8;
+  border-left: 4px solid var(--blue);
+  border-radius: 4px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+.callout-amber { border-left-color: var(--amber); }
+.callout-green { border-left-color: var(--green); }
+.callout-red { border-left-color: var(--red); }
+
+/* Key-value grid */
+.kv-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 6px 16px;
+  font-size: 14px;
+}
+.kv-grid dt { color: var(--text-muted); font-weight: 500; }
+.kv-grid dd { color: var(--text); }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+th {
+  text-align: left;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+tr:nth-child(even) td { background: #FAFAF8; }
+
+/* Status dots */
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.dot-green { background: var(--green); }
+.dot-amber { background: var(--amber); }
+.dot-red { background: var(--red); }
+
+/* Timeline */
+.timeline { border-left: 3px solid var(--border); margin: 16px 0 16px 8px; padding-left: 20px; }
+.timeline-item { margin-bottom: 14px; position: relative; }
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border);
+  border: 2px solid var(--bg);
+}
+.timeline-item.resolved::before { background: var(--green); }
+.timeline-item .date {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Episode cards */
+.episode {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.episode-header {
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.episode-header.closed { background: #F0F5ED; }
+.episode-header.withdrawn { background: #F5F0E8; }
+.episode-body { padding: 16px 20px; }
+.episode-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.badge-closed { background: var(--green); color: #fff; }
+.badge-withdrawn { background: var(--amber); color: #fff; }
+
+/* Image gallery */
+.img-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.img-gallery figure {
+  margin: 0;
+  cursor: pointer;
+}
+.img-gallery img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  display: block;
+}
+.img-gallery figcaption {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-align: center;
+}
+.img-note {
+  font-size: 11px;
+  color: var(--amber);
+  font-style: italic;
+  display: block;
+}
+
+/* Side-by-side images */
+.img-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+.img-compare figure { margin: 0; cursor: pointer; }
+.img-compare img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  display: block;
+}
+.img-compare figcaption {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* Lightbox */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.lightbox.open { display: flex; }
+.lightbox img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 4px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+.lightbox-caption {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ddd;
+  font-size: 14px;
+  text-align: center;
+  max-width: 600px;
+}
+
+/* Checklist */
+.checklist-group { margin-bottom: 24px; }
+.checklist-group h3 { margin-top: 0; }
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #F0EDE8;
+}
+.checklist-item input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--green);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.checklist-item label {
+  font-size: 14px;
+  cursor: pointer;
+}
+.checklist-item input:checked + label {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+.reset-btn {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: none;
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+.reset-btn:hover { background: #F0EDE8; }
+
+/* Team list */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.team-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.team-card .name { font-weight: 600; font-size: 14px; }
+.team-card .role { font-size: 13px; color: var(--text-muted); }
+.team-card .contact { font-size: 12px; color: var(--blue); margin-top: 2px; }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .site-header { padding: 16px 16px; }
+  .tab-nav { padding: 8px 12px 0; gap: 4px; }
+  .tab-btn { font-size: 12px; padding: 6px 10px; }
+  .tab-panel { padding: 20px 16px 40px; }
+  .kv-grid { grid-template-columns: 1fr; }
+  .kv-grid dt { margin-top: 8px; }
+  .img-compare { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
+  h2 { font-size: 19px; }
+}
+
+/* Print */
+@media print {
+  .tab-nav { display: none; }
+  .tab-panel { display: block !important; padding: 16px 0; }
+  .tab-panel h2 { page-break-after: avoid; }
+  .card, .episode, .callout { page-break-inside: avoid; }
+  .site-header { background: #fff; color: #000; border-bottom: 2px solid #000; }
+  .site-header .status-badge { border: 1px solid #000; background: #fff; color: #000; }
+  .lightbox { display: none !important; }
+  body { font-size: 12px; }
+  .reset-btn { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>423 Flora Vista Drive, Santa Barbara</h1>
+  <div class="header-meta">
+    <span><strong>APN:</strong> 041-241-02</span>
+    <span><strong>Lot:</strong> 6,100 sf / 0.14 ac</span>
+    <span><strong>Zoning:</strong> RS-7.5 &middot; Inland Area &middot; Coastal Interior Fire Zone</span>
+    <span class="status-badge">In Escrow &mdash; Contingency expires 27 May 2026</span>
+  </div>
+</header>
+
+<nav class="tab-nav" role="tablist">
+  <button class="tab-btn active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+  <button class="tab-btn" data-tab="planning" role="tab">Planning History</button>
+  <button class="tab-btn" data-tab="structures" role="tab">Structures &amp; Permits</button>
+  <button class="tab-btn" data-tab="conditions" role="tab">Site Conditions</button>
+  <button class="tab-btn" data-tab="regulatory" role="tab">Regulatory</button>
+  <button class="tab-btn" data-tab="adu" role="tab">ADU Strategy</button>
+  <button class="tab-btn" data-tab="rebuild" role="tab">Rebuild</button>
+  <button class="tab-btn" data-tab="title" role="tab">Title &amp; Escrow</button>
+  <button class="tab-btn" data-tab="actions" role="tab">Action Tracker</button>
+</nav>
+
+<!-- ==================== OVERVIEW ==================== -->
+<section class="tab-panel active" id="panel-overview" role="tabpanel">
+  <h2>Property Overview</h2>
+
+  <div class="card">
+    <dl class="kv-grid">
+      <dt>Address</dt><dd>423 Flora Vista Drive, Santa Barbara, CA</dd>
+      <dt>Lot Size</dt><dd>6,100 sf (0.14 acres)</dd>
+      <dt>Zoning</dt><dd>RS-7.5 (Single-Family Residential)</dd>
+      <dt>Area</dt><dd>Inland Area (not Coastal Commission jurisdiction)</dd>
+      <dt>Fire Zone</dt><dd>Coastal Interior / High Fire Hazard Area (eff. 7/31/2025)</dd>
+      <dt>Existing Use</dt><dd>Single-family residence, legal nonconforming (side setback)</dd>
+      <dt>Plan</dt><dd>Live in existing home &rarr; add detached ADU near-term &rarr; rebuild long-term</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h3>Summary</h3>
+    <p>423 Flora Vista is a long-standing single-family home on the Mesa, situated on a 6,100 sf RS-7.5 lot. The plan is to move in and live in the existing house while pursuing a detached ADU addition in the near term, then eventually rebuild the primary residence. The property was recently in a prior development application (PLN2025-00240) that was withdrawn — not because the lot couldn't support it, but because the prior owners found high-end construction costs prohibitive. The lot can accommodate both a primary residence and an ADU under current and forthcoming regulations.</p>
+  </div>
+
+  <div class="callout callout-green">
+    <h4>Where Things Stand</h4>
+    <p>Most concerns surfaced during initial disclosure review have been investigated and either resolved or downgraded. The 2023 enforcement case is closed. Foundation, sewer, and mold inspections are complete with no deal-breakers. Remaining open items are limited:</p>
+    <ul style="margin:8px 0 0 20px; font-size:14px;">
+      <li>Mold sample lab results (expected Tue/Wed)</li>
+      <li>Roofer evaluation (no attic access during mold inspection)</li>
+      <li>Rear laundry shed permit status — needs city verification</li>
+      <li>Insurance binding quote for High Fire Hazard Area</li>
+      <li>Asbestos/lead testing if pre-1980 construction</li>
+    </ul>
+  </div>
+
+  <h3>Key Team</h3>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="name">Jill Agonias</div>
+      <div class="role">Realtor, Village Properties</div>
+    </div>
+    <div class="team-card">
+      <div class="name">Janice Bowie</div>
+      <div class="role">Escrow Officer, Chicago Title</div>
+    </div>
+    <div class="team-card">
+      <div class="name">Steve Amenta</div>
+      <div class="role">Title Officer</div>
+      <div class="contact">(805) 879-9414 &middot; samenta@fnf.com</div>
+    </div>
+    <div class="team-card">
+      <div class="name">Brian Banks</div>
+      <div class="role">Planner Consultant</div>
+    </div>
+    <div class="team-card">
+      <div class="name">Fernando Meza</div>
+      <div class="role">City Planning</div>
+    </div>
+    <div class="team-card">
+      <div class="name">Paul</div>
+      <div class="role">Montecito Plumbing — Sewer</div>
+    </div>
+    <div class="team-card">
+      <div class="name">Danny Cole</div>
+      <div class="role">Foundation Contractor</div>
+    </div>
+    <div class="team-card">
+      <div class="name">Josh</div>
+      <div class="role">Mold Inspector</div>
+    </div>
+    <div class="team-card">
+      <div class="name">Ken Dickson</div>
+      <div class="role">Architect, Windward (prior project)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PLANNING HISTORY ==================== -->
+<section class="tab-panel" id="panel-planning" role="tabpanel">
+  <h2>Planning History</h2>
+  <p style="color:var(--text-muted); margin-bottom:24px;">Two distinct episodes in the property's recent planning record. Both are now closed/withdrawn — neither represents an active issue.</p>
+
+  <!-- ENF2023 -->
+  <article class="episode">
+    <div class="episode-header closed">
+      <div>
+        <strong style="font-size:16px;">ENF2023-00179</strong>
+        <span style="color:var(--text-muted); font-size:13px; margin-left:8px;">Code Enforcement</span>
+      </div>
+      <span class="episode-badge badge-closed">Closed &mdash; Violations Abated</span>
+    </div>
+    <div class="episode-body">
+      <p style="font-size:14px; color:var(--text-muted); margin-bottom:16px;">Full correspondence from the city's enforcement file (Street File 3, pp. 1&ndash;16). Source: seller disclosure package.</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="date">April 26, 2023</span>
+          Complaint submitted to Code Compliance: "URGENT: Substandard Building &mdash; Request for Investigation." Case opened as ENF2023-00179.
+        </div>
+        <div class="timeline-item">
+          <span class="date">April 27, 2023</span>
+          City inspected. Found unpermitted construction at front of existing dwelling, described as "in set back and in framing stage." Stop Work Notice posted. Two violations cited under SBMC &sect;22.04.010.
+        </div>
+        <div class="timeline-item">
+          <span class="date">May 2, 2023</span>
+          Rochelle emailed Dilanian: <em>"As I understand the policies, we are building within the setback and are not able to build storage unit in the front yard. <strong>It appears what was there was not permitted.</strong> With that, I am thinking the best course of action is to move it to the back of the property unless you see a pathway for us to save what we have done so far."</em>
+        </div>
+        <div class="timeline-item">
+          <span class="date">May 2023 (undated letter)</span>
+          Dilanian responded: the shed "is now constructed" and must be demolished to the slab surface &mdash; "the planning department has not approved its location." Advised Rochelle to draw a site plan with property lines, setbacks, and proposed shed location, then bring it to planning before going to building counter for a permit.
+        </div>
+        <div class="timeline-item">
+          <span class="date">June 19, 2023</span>
+          Rochelle emailed Dilanian: <em>"We have moved the structure and are ready for city to come by and confirm."</em>
+        </div>
+        <div class="timeline-item">
+          <span class="date">June 20, 2023</span>
+          Dilanian reinspection. Shed removed completely from front, relocated to rear yard. Stem walls still in place where shed had been &mdash; told Rochelle curb/stem wall "may need to be removed per planning and for drainage issues. She will consider it." Rear yard already prepped with SOG formwork and reinforcement. Told Rochelle not to pour concrete until approval granted. Stop Work Notice removed.
+        </div>
+        <div class="timeline-item">
+          <span class="date">June 21, 2023</span>
+          Rochelle emailed General Planning Counter (cc: Dilanian): <em>"Where do I find the open yard requirements?"</em> Planning (Marisela Salinas) responded: <em>"We need a scaled site plan to confirm compliance with the setbacks and open yard. Given how far back the main residence is from the street, we're not sure that the required open yard is met. If it's nonconforming, there might not be an appropriate location for the shed without other discretionary approvals."</em>
+        </div>
+        <div class="timeline-item">
+          <span class="date">June 30, 2023</span>
+          Dilanian emailed Rochelle: <em>"Any progress on the relocation of the shed? <strong>I hope you didn't place concrete yet.</strong>"</em>
+        </div>
+        <div class="timeline-item">
+          <span class="date">July 10, 2023</span>
+          Email thread continues, subject: "RE: Do I need a permit."
+        </div>
+        <div class="timeline-item resolved">
+          <span class="date">August 10, 2023</span>
+          Case closed: <strong>"Violations Abated."</strong> File printed this date.
+        </div>
+      </div>
+
+      <div class="callout">
+        <h4>What the File Shows</h4>
+        <p>The cited violations (unpermitted front framing) were resolved &mdash; the structure was removed. The case closed on that basis. However, the correspondence also shows that the <strong>shed relocation to the rear yard was never fully approved</strong>. Both Dilanian and Planning (Salinas) required a site plan and planning review before the shed could be placed and concrete poured. The file does not contain evidence that this approval was obtained. The shed now sits on a built concrete foundation in the rear yard.</p>
+      </div>
+
+      <h4>Photos</h4>
+      <div class="img-gallery" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));">
+        <figure onclick="openLightbox(this)">
+          <img src="images/street-view-07.png" alt="Google Street View Nov 2007 showing front structure present">
+          <figcaption>Street View Nov 2007 &mdash; front structure present</figcaption>
+        </figure>
+        <figure onclick="openLightbox(this)">
+          <img src="images/street-view-2025.png" alt="Google Street View May 2025 showing current state">
+          <figcaption>Street View May 2025 &mdash; current state</figcaption>
+        </figure>
+        <figure onclick="openLightbox(this)">
+          <img src="images/enf-2023-stop-work-photo.png" alt="Stop Work Notice photo showing unpermitted new framing">
+          <figcaption>Stop Work photo &mdash; new framing (the violation)</figcaption>
+        </figure>
+        <figure onclick="openLightbox(this)">
+          <img src="images/enf-concrete-shed.png" alt="Rear yard SOG prep with formwork and reinforcement">
+          <figcaption>Rear yard SOG prep (6/20/2023)</figcaption>
+        </figure>
+        <figure onclick="openLightbox(this)">
+          <img src="images/enf-resolution.png" alt="6/20/2023 Dilanian reinspection report">
+          <figcaption>6/20/2023 reinspection report</figcaption>
+        </figure>
+      </div>
+    </div>
+  </article>
+
+  <h3>Seller Disclosure vs. Public Record</h3>
+  <div class="card">
+    <p>The enforcement file above was provided by the seller as part of the disclosure package (Street File 3). However, the seller's Transfer Disclosure Statement contains answers that appear inconsistent with the contents of that same file.</p>
+
+    <figure onclick="openLightbox(this)" style="margin:16px 0; cursor:pointer;">
+      <img src="images/dislosure-permitting.png" alt="TDS Section C with highlighted disclosure questions" style="width:100%; border-radius:6px; border:1px solid var(--border);">
+      <figcaption style="font-size:12px; color:var(--text-muted); margin-top:4px;">TDS Section C &mdash; highlighted items answered "No" by seller</figcaption>
+    </figure>
+
+    <table>
+      <thead><tr><th>TDS Question</th><th>Answer</th><th>What the ENF File Shows</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Q4:</strong> Unpermitted room additions, modifications, or repairs</td>
+          <td><span class="dot dot-red"></span>No</td>
+          <td>
+            <ul style="margin:0 0 0 16px; font-size:13px;">
+              <li>Case description: "Unpermitted construction at front of existing dwelling, in set back and in framing stage"</li>
+              <li>Seller's own email (5/2/2023): <em>"It appears what was there was not permitted."</em></li>
+              <li>Rear-left corner infill: original blueprint shows a stepped notch that has been filled in; not on original plans</li>
+              <li>Roughly half of one bedroom is built within the side setback</li>
+              <li>Rear laundry shed: no permit on record, has plumbing and electrical</li>
+              <li>Rear shed foundation: both Dilanian and Planning required approval before placement; no record of approval in the file</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Q5:</strong> Alterations not in compliance with building codes</td>
+          <td><span class="dot dot-red"></span>No</td>
+          <td>
+            <ul style="margin:0 0 0 16px; font-size:13px;">
+              <li>Two SBMC &sect;22.04.010 violations cited</li>
+              <li>Front construction documented by city as being in the setback</li>
+              <li>Main residence encroaches into side setback (roughly half a bedroom)</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Q15:</strong> Any notices of abatement or citations</td>
+          <td><span class="dot dot-red"></span>No</td>
+          <td>
+            <ul style="margin:0 0 0 16px; font-size:13px;">
+              <li>Stop Work Notice posted on property 4/27/2023</li>
+              <li>Two code violations formally cited</li>
+              <li>Case closed as "violations abated" &mdash; but the question asks whether the seller is <em>aware of any</em>, not whether they remain open</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-amber" style="margin-top:16px;">
+      <h4>Discussion Point</h4>
+      <p>The seller provided the enforcement file &mdash; including her own email acknowledging unpermitted construction &mdash; as part of the disclosure package, yet answered "No" to all three of these questions on the TDS. These discrepancies warrant a conversation with the seller's side before contingency removal on May 27.</p>
+    </div>
+  </div>
+
+  <!-- PLN2025 -->
+  <article class="episode">
+    <div class="episode-header withdrawn">
+      <div>
+        <strong style="font-size:16px;">PLN2025-00240</strong>
+        <span style="color:var(--text-muted); font-size:13px; margin-left:8px;">New Construction Application</span>
+      </div>
+      <span class="episode-badge badge-withdrawn">Withdrawn by Prior Owner</span>
+    </div>
+    <div class="episode-body">
+      <p>Application for demolition of existing SFR and construction of new 1,772 sf two-story residence + 517 sf attached garage.</p>
+
+      <div class="timeline">
+        <div class="timeline-item"><span class="date">5/15/2025</span> Application submitted</div>
+        <div class="timeline-item"><span class="date">6/3/2025</span> Routed to departments</div>
+        <div class="timeline-item"><span class="date">7/1/2025</span> Deemed incomplete</div>
+        <div class="timeline-item"><span class="date">7/31/2025</span> Property moved into High Fire Hazard Area</div>
+        <div class="timeline-item"><span class="date">8/8/2025</span> CalGEM clearance received</div>
+        <div class="timeline-item"><span class="date">9/3/2025</span> Geotech report delivered</div>
+        <div class="timeline-item"><span class="date">11/19/2025</span> Application withdrawn</div>
+      </div>
+
+      <div class="callout callout-amber">
+        <h4>Why It Was Withdrawn</h4>
+        <p>Per architect Ken Dickson (Windward): the prior owners walked because high-end contractors quoted <strong>$1,000&ndash;$1,200/sf</strong>, making the project financially infeasible. The withdrawal was <em>not</em> because the lot couldn't support the project. Open yard requirement was achievable per Ken's revised site plan.</p>
+      </div>
+
+      <p style="font-size:14px; color:var(--text-muted);">Tier 3 SWMP designation triggered "many comments to address" — comments live in the city's internal Teams document, not in the disclosure package. A Public Records Act request may be needed to obtain them.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ==================== STRUCTURES & PERMITS ==================== -->
+<section class="tab-panel" id="panel-structures" role="tabpanel">
+  <h2>Structures &amp; Permits</h2>
+  <p style="color:var(--text-muted); margin-bottom:20px;">Current permit status of each structure on the property. See Planning History tab for the full ENF2023-00179 timeline and evidence.</p>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>Structure</th><th>Status</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Main residence</strong></td>
+          <td><span class="dot dot-green"></span>Permitted, long-standing</td>
+          <td>TDS flags foundation concern. Legal nonconforming as to 6 ft side setback per Brian Banks &mdash; roughly half of one bedroom is built within the setback.</td>
+        </tr>
+        <tr>
+          <td><strong>Carport</strong></td>
+          <td><span class="dot dot-green"></span>Permitted</td>
+          <td>Shown on original blueprints per Assessor file.</td>
+        </tr>
+        <tr>
+          <td><strong>Front structure / slab / curb</strong></td>
+          <td><span class="dot dot-amber"></span>Long-standing (&ge;2007)</td>
+          <td>Likely original or legal nonconforming. Visible in Street View since Nov 2007. 2023 ENF was about new framing <em>adjacent</em> to it, not the structure itself. Dilanian's "may need removal" was advisory, not mandatory.</td>
+        </tr>
+        <tr>
+          <td><strong>Rear-left corner infill</strong></td>
+          <td><span class="dot dot-red"></span>Not permitted</td>
+          <td>Original Assessor blueprint shows a stepped/notched corner at the back left of the house. That notch has been filled in to square off the corner &mdash; an addition not reflected on the original plans. Visible on aerial imagery. Interior to the lot (not in a setback).</td>
+        </tr>
+        <tr>
+          <td><strong>Pergola</strong></td>
+          <td><span class="dot dot-amber"></span>Status TBD</td>
+          <td>Brian: "Would be allowed in compliance with certain area, location, and height limitations."</td>
+        </tr>
+        <tr>
+          <td><strong>Rear laundry shed</strong></td>
+          <td><span class="dot dot-red"></span>Not permitted</td>
+          <td>Has plumbing and electrical. No permit on record. Brian: "Not sure if that was permitted or part of the original construction. Would need to confirm."</td>
+        </tr>
+        <tr>
+          <td><strong>Rear shed foundation (concrete pad)</strong></td>
+          <td><span class="dot dot-red"></span>Approval status unknown</td>
+          <td>Shed now sits on a built concrete foundation. During 6/20/2023 reinspection, Dilanian told seller not to pour until "approval is granted from planning and building." On 6/30 he followed up: "I hope you didn't place concrete yet." Planning (Salinas) also required a site plan. No record of approval in the ENF file.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Reference Images</h3>
+  <div class="img-gallery">
+    <figure onclick="openLightbox(this)">
+      <img src="images/blueprint.png" alt="Original blueprints from Assessor file showing carport and lot layout">
+      <figcaption>Assessor blueprints (carport &amp; lot)</figcaption>
+    </figure>
+    <figure onclick="openLightbox(this)">
+      <img src="images/street-view-07.png" alt="Google Street View Nov 2007">
+      <figcaption>Street View Nov 2007</figcaption>
+    </figure>
+    <figure onclick="openLightbox(this)">
+      <img src="images/street-view-2025.png" alt="Google Street View May 2025">
+      <figcaption>Street View May 2025</figcaption>
+    </figure>
+    <figure onclick="openLightbox(this)">
+      <img src="images/aerial.png" alt="Aerial view of 423 Flora Vista showing roof footprint and lot">
+      <figcaption>Aerial &mdash; roof footprint &amp; lot</figcaption>
+    </figure>
+  </div>
+
+</section>
+
+<!-- ==================== SITE CONDITIONS ==================== -->
+<section class="tab-panel" id="panel-conditions" role="tabpanel">
+  <h2>Site Conditions &amp; Inspections</h2>
+
+  <!-- Foundation -->
+  <div class="card">
+    <h3 style="margin-top:0;">Foundation</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">Danny Cole &middot; 5/22 site visit</p>
+    <p>"Pleasantly surprised after reading the report — not as bad." House sits out of level but no day-to-day problems. Higher earthquake risk, but "would take a big one." <strong>$20K reinforcement option</strong> available; cost would be offset if foundation gets fully replaced in a rebuild. Comfortable to live in for now.</p>
+    <div class="callout callout-green" style="margin-bottom:0;">
+      <strong>Bottom line:</strong> Livable as-is. Reinforcement is optional insurance. Decision can wait until rebuild timeline firms up.
+    </div>
+  </div>
+
+  <!-- Sewer -->
+  <div class="card">
+    <h3 style="margin-top:0;">Sewer</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">Paul, Montecito Plumbing &middot; 5/22</p>
+    <p>Lateral replaced in 2020 — in good shape. Clay pipe from sidewalk to street center (90%+ of the neighborhood is the same). Possible <strong>$10&ndash;15K city-mandated upgrade</strong> someday — normal for the area.</p>
+    <dl class="kv-grid" style="margin-top:12px;">
+      <dt>Cleanout schedule</dt><dd>Every 1&ndash;5 years at ~$500. Currently at 30% growth; recommend cleaning in ~1 year.</dd>
+      <dt>Access point</dt><dd>Should be covered by dirt for code compliance (currently exposed).</dd>
+      <dt>Under-house pipes</dt><dd>Look good. Recommend upgrade to plastic at some point.</dd>
+    </dl>
+  </div>
+
+  <!-- Mold -->
+  <div class="card">
+    <h3 style="margin-top:0;">Mold</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">Josh &middot; 5/22</p>
+    <p>No visible water damage or mold. Moisture readings within normal range. Samples sent for lab testing — <strong>results expected Tue/Wed</strong>. Recommended roofer follow-up since there's no attic access for a full roof inspection.</p>
+  </div>
+
+  <!-- Geotech -->
+  <div class="card">
+    <h3 style="margin-top:0;">Geotechnical</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">Pacific Materials Lab &middot; 9/3/2025 report (from prior project)</p>
+    <p>Expansive black clay soil (Monterey Formation). Field compaction at 74.4% (90% needed for foundation construction). Mat foundation per CBC &sect;1808.6.2 required for any new build.</p>
+    <div class="callout callout-green" style="margin-bottom:0;">
+      <strong>Brian's read:</strong> "Basically normal — this is how you build in this area." The specific concern is differential settlement at patio areas.
+    </div>
+  </div>
+
+  <!-- Oil Well -->
+  <div class="card">
+    <h3 style="margin-top:0;">Oil Well</h3>
+    <p>One well approximately 100 ft from property line on neighbor's property. 50 ft buffer applies — <strong>not a concern</strong>. CalGEM letter (8/8/2025) in disclosure package confirms no wells in project area.</p>
+  </div>
+
+  <!-- Historical -->
+  <div class="card">
+    <h3 style="margin-top:0;">Historical Significance</h3>
+    <p>City Historian has already determined the existing residence is <strong>NOT historically significant</strong> during the prior project review. No further historical analysis needed for rebuild.</p>
+  </div>
+</section>
+
+<!-- ==================== REGULATORY CONSTRAINTS ==================== -->
+<section class="tab-panel" id="panel-regulatory" role="tabpanel">
+  <h2>Regulatory Constraints</h2>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Zoning Summary</h3>
+    <dl class="kv-grid">
+      <dt>Zone</dt><dd>RS-7.5 (Single-Family Residential)</dd>
+      <dt>Area</dt><dd>Inland Area — Coastal Zone boundary is Cliff Drive. NOT Coastal Commission jurisdiction.</dd>
+      <dt>Fire Zone</dt><dd>Coastal Interior Fire Zone / High Fire Hazard Area (eff. 7/31/2025)</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Setbacks &amp; Dimensional Standards</h3>
+    <table>
+      <thead><tr><th>Parameter</th><th>Requirement</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Front setback</td><td>25 ft</td><td></td></tr>
+        <tr><td>Side setback</td><td>6 ft</td><td>Existing house encroaches &rarr; legal nonconforming</td></tr>
+        <tr><td>Rear setback</td><td>6 ft</td><td></td></tr>
+        <tr><td>Max building height</td><td>30 ft (main) / 30 ft &amp; 2 stories (accessory)</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Floor Area &amp; Coverage</h3>
+    <p>For 4,000&ndash;9,999 sf lot bracket:</p>
+    <dl class="kv-grid">
+      <dt>Max FAR</dt><dd><strong>~2,725 sf</strong> total floor area<br><span style="font-size:13px; color:var(--text-muted);">Formula: 1,200 + (0.25 &times; 6,100) = 2,725</span></dd>
+      <dt>85% threshold</dt><dd>2,316 sf (precluded development)</dd>
+      <dt>Max accessory</dt><dd>1,300 sf aggregate</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Required Open Yard</h3>
+    <p style="font-size:14px;">Per SBMC &sect;30.140.140:</p>
+    <table>
+      <thead><tr><th>Scenario</th><th>Min Area</th><th>Min Dimension</th></tr></thead>
+      <tbody>
+        <tr><td>House only</td><td>1,250 sf</td><td>20 &times; 20 ft</td></tr>
+        <tr><td>House + ADU</td><td>800 sf</td><td>15 &times; 15 ft</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:14px; margin-top:8px;">Side setbacks count. Hardscape counts. Pools/low decks count. Can be in front yard beyond the 25 ft primary front setback. Multiple areas allowed — each must independently meet minimum dimension. <strong>Per Ken Dickson, the lot CAN satisfy current open yard — he has a compliant revised site plan.</strong></p>
+  </div>
+
+  <div class="callout callout-amber">
+    <h4>Upcoming Ordinance Changes (effective next month per Ken)</h4>
+    <ul style="margin:4px 0 0 20px; font-size:14px;">
+      <li>Garage conversions to habitable space allowed</li>
+      <li>Only 2 off-street parking required for SFR (down from current)</li>
+      <li>New open yard standard</li>
+    </ul>
+    <p style="margin-top:8px; font-size:14px;">"Will make compliance easier."</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">New Parkway / Sidewalk Requirement</h3>
+    <p>For new construction: 6" curb + 48" parkway + 72" sidewalk + 6" buffer = <strong>11 ft total</strong> from existing curb. Property owner responsibility. Not previously included in the 2025 plan set.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Tier 3 SWMP</h3>
+    <p>Applies to substantial redevelopment. Comments from 2025 review were never resolved. Could be costly per Fernando — bioswales, infiltration, treatment BMPs likely required.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">High Fire Hazard Area</h3>
+    <p>Effective 7/31/2025. CBC Chapter 7A construction standards apply to any new build. Zones 0/1/2 landscape requirements. ADU still allowed per Brian Banks. ADU requires <strong>1 uncovered parking space</strong> due to fire zone designation.</p>
+  </div>
+</section>
+
+<!-- ==================== ADU STRATEGY ==================== -->
+<section class="tab-panel" id="panel-adu" role="tabpanel">
+  <h2>ADU Strategy</h2>
+
+  <div class="callout callout-green">
+    <h4>Recommended Approach (Fernando + Brian)</h4>
+    <p>State-exempt "special" ADU: <strong>800 sf max, detached, single story</strong>. Minimal additional standards, ministerial review, guaranteed to go through.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Key Parameters</h3>
+    <dl class="kv-grid">
+      <dt>Setbacks</dt><dd>4 ft side/rear per state law preemption</dd>
+      <dt>Suggested location</dt><dd>Front northeasterly setback, tandem parking at existing driveway (per Ken Dickson)</dd>
+      <dt>Open yard</dt><dd>ADU doesn't need its own; can encroach into primary's open yard provided 800 sf / 15&times;15 ft remains</dd>
+      <dt>Parking</dt><dd>1 uncovered space required (fire zone designation)</dd>
+      <dt>Review type</dt><dd>Ministerial — no discretionary review</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Alternative Approaches</h3>
+    <p><strong>Reclassify main as ADU:</strong> Fernando mentioned this option but noted you'd have to do the main build at the same time. Only relevant for the long-term rebuild scenario.</p>
+    <p><strong>"Build garage, convert to ADU" workaround:</strong> Previously used to satisfy parking requirements. New ordinance may make this unnecessary.</p>
+  </div>
+</section>
+
+<!-- ==================== REBUILD ==================== -->
+<section class="tab-panel" id="panel-rebuild" role="tabpanel">
+  <h2>Rebuild Considerations (Long Term)</h2>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Cost Reality</h3>
+    <p>Per Ken Dickson: prior owners received high-end contractor quotes at <strong>$1,000&ndash;$1,200/sf</strong>. For a 2,000&ndash;2,400 sf build, that's <strong>$2M&ndash;$2.9M construction cost alone</strong> — which is why they walked.</p>
+    <p>Mid-tier pricing in SB can be <strong>$600&ndash;$900/sf</strong> depending on builder and finishes.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Buildable Envelope</h3>
+    <dl class="kv-grid">
+      <dt>Approx. buildable area</dt><dd>~38 ft wide &times; depth (within setbacks)</dd>
+      <dt>FAR cap</dt><dd>2,725 sf total floor area</dd>
+    </dl>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0;">Additional Costs to Factor</h3>
+    <ul style="margin-left:20px; font-size:14px;">
+      <li><strong>High Fire Area construction</strong> — CBC Chapter 7A adds material cost</li>
+      <li><strong>Tier 3 SWMP</strong> — bioswales, infiltration, treatment BMPs</li>
+      <li><strong>Parkway/sidewalk</strong> — 11 ft frontage improvement, property owner responsibility</li>
+      <li><strong>Mat foundation</strong> — required per geotech on expansive clay</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <h4>Ken's Recommendation</h4>
+    <p>Start design from scratch under the new ordinance — don't just dust off the prior plans. The regulatory landscape is changing (new open yard rules, parking reductions, fire code updates), so a fresh approach will yield a better outcome.</p>
+  </div>
+</section>
+
+<!-- ==================== TITLE & ESCROW ==================== -->
+<section class="tab-panel" id="panel-title" role="tabpanel">
+  <h2>Title &amp; Escrow</h2>
+
+  <div class="card">
+    <dl class="kv-grid">
+      <dt>Escrow Company</dt><dd>Chicago Title</dd>
+      <dt>Escrow Officer</dt><dd>Janice Bowie</dd>
+      <dt>Title Officer</dt><dd>Steve Amenta<br><span style="font-size:13px; color:var(--blue);">(805) 879-9414 &middot; samenta@fnf.com</span></dd>
+      <dt>EMD</dt><dd>Delivered 5/22/2026</dd>
+      <dt>Prelim Title Report</dt><dd>Reviewed — no unusual exceptions flagged</dd>
+      <dt>Contingency Expires</dt><dd><strong style="color:var(--amber);">May 27, 2026</strong></dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ==================== ACTION TRACKER ==================== -->
+<section class="tab-panel" id="panel-actions" role="tabpanel">
+  <h2>Open Items / Action Tracker</h2>
+  <button class="reset-btn" onclick="resetChecklist()">Reset checklist</button>
+
+  <div class="checklist-group">
+    <h3>Before Contingency Removal</h3>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-1" onchange="saveCheck(this)">
+      <label for="chk-1">Confirm mold sample results (Josh, Tue/Wed)</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-2" onchange="saveCheck(this)">
+      <label for="chk-2">Roofer evaluation (Josh referral)</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-3" onchange="saveCheck(this)">
+      <label for="chk-3">Verify rear laundry shed permit status with city</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-4" onchange="saveCheck(this)">
+      <label for="chk-4">Insurance binding quote (HFHA) — confirm availability and cost</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-5" onchange="saveCheck(this)">
+      <label for="chk-5">Public Records Act request: Creeks SWMP comments on PLN2025-00240</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-6" onchange="saveCheck(this)">
+      <label for="chk-6">Final review of escrow checklist (Jill)</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-7" onchange="saveCheck(this)">
+      <label for="chk-7">Asbestos/lead testing if pre-1980 construction</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-15" onchange="saveCheck(this)">
+      <label for="chk-15">Discuss TDS disclosure concerns with Jill (Q4, Q5, Q15 — seller checked "No" despite ENF record)</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-16" onchange="saveCheck(this)">
+      <label for="chk-16">Confirm rear shed foundation permit status with city (concrete poured without required approval)</label>
+    </div>
+  </div>
+
+  <div class="checklist-group">
+    <h3>After Close / Before ADU</h3>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-8" onchange="saveCheck(this)">
+      <label for="chk-8">Schedule sewer cleaning (~1 year per Paul)</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-9" onchange="saveCheck(this)">
+      <label for="chk-9">Cover sewer access point with dirt for code compliance</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-10" onchange="saveCheck(this)">
+      <label for="chk-10">Sewer line upgrade under house to plastic</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-11" onchange="saveCheck(this)">
+      <label for="chk-11">Engage architect for state-exempt ADU design</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-12" onchange="saveCheck(this)">
+      <label for="chk-12">Confirm timing of new city ordinance changes</label>
+    </div>
+  </div>
+
+  <div class="checklist-group">
+    <h3>Long-Term Planning</h3>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-13" onchange="saveCheck(this)">
+      <label for="chk-13">Rebuild planning — start from scratch per Ken's advice</label>
+    </div>
+    <div class="checklist-item">
+      <input type="checkbox" id="chk-14" onchange="saveCheck(this)">
+      <label for="chk-14">Foundation reinforcement ($20K) or wait for full rebuild — decide</label>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightbox-img" src="" alt="">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<script>
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// Lightbox
+function openLightbox(figure) {
+  const img = figure.querySelector('img');
+  const caption = figure.querySelector('figcaption');
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = img.src;
+  document.getElementById('lightbox-img').alt = img.alt;
+  document.getElementById('lightbox-caption').textContent = caption ? caption.textContent : '';
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// Checklist persistence
+const STORAGE_PREFIX = 'flora-vista-checklist-';
+
+function saveCheck(el) {
+  localStorage.setItem(STORAGE_PREFIX + el.id, el.checked);
+}
+
+function loadChecklist() {
+  document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(el => {
+    const val = localStorage.getItem(STORAGE_PREFIX + el.id);
+    if (val === 'true') el.checked = true;
+  });
+}
+
+function resetChecklist() {
+  if (!confirm('Reset all checklist items?')) return;
+  document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(el => {
+    el.checked = false;
+    localStorage.removeItem(STORAGE_PREFIX + el.id);
+  });
+}
+
+loadChecklist();
+</script>
+</body>
+</html>
